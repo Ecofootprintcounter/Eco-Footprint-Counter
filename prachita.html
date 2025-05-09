@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Eco Footprint Counter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f4f4f4;
+      color: #333;
+      transition: background 0.3s, color 0.3s;
+    }
+    .dark-mode {
+      background-color: #121212;
+      color: #f0f0f0;
+    }
+    header {
+      background: #4caf50;
+      padding: 1em;
+      text-align: center;
+      color: white;
+      position: relative;
+    }
+    nav {
+      display: flex;
+      justify-content: space-around;
+      background: #333;
+      padding: 1em 0;
+    }
+    nav button {
+      background: none;
+      color: white;
+      border: none;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    nav button:hover {
+      text-decoration: underline;
+    }
+    .tab {
+      display: none;
+      padding: 20px;
+    }
+    .active-tab {
+      display: block;
+    }
+    .dark-toggle {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      cursor: pointer;
+      padding: 0.5em;
+      background: #ffffff33;
+      border: none;
+      color: white;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin: 10px 0;
+    }
+    input[type="number"] {
+      padding: 0.5em;
+      margin: 0.5em 0;
+      width: 100%;
+    }
+    button.calculate {
+      padding: 10px 20px;
+      margin-top: 10px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    ul li {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    Eco Footprint Counter
+    <button class="dark-toggle">Toggle Dark Mode</button>
+  </header>
+  <nav>
+    <button onclick="switchTab('home')">Home</button>
+    <button onclick="switchTab('calculator')">Calculator</button>
+    <button onclick="switchTab('chart')">Chart</button>
+    <button onclick="switchTab('tips')">Tips</button>
+    <button onclick="switchTab('about')">About</button>
+  </nav>
+
+  <!-- Home Tab -->
+  <section id="home" class="tab active-tab">
+    <h2>Welcome to the Eco Footprint Counter</h2>
+    <p>
+      Our planet is facing major environmental challenges, and every individual's lifestyle plays a role.
+      The Eco Footprint Counter helps you understand how your daily habits contribute to greenhouse gas emissions.
+      This interactive tool offers a simple way to calculate your carbon footprint and visualize it using charts.
+    </p>
+    <p>
+      Start by using the calculator to estimate emissions from electricity use, transport, and waste.
+      Then, explore tips to reduce your impact and learn more about why sustainability matters.
+    </p>
+    <img src="https://images.unsplash.com/photo-1588692046442-9f9a7f78c235?auto=format&fit=crop&w=800&q=60" alt="Eco Forest" />
+  </section>
+
+  <!-- Calculator Tab -->
+  <section id="calculator" class="tab">
+    <h2>Carbon Footprint Calculator</h2>
+    <p>
+      Enter your weekly values to estimate your carbon footprint:
+    </p>
+    <label>Electricity usage (kWh):
+      <input type="number" id="electricity" placeholder="e.g., 200" />
+    </label><br/>
+    <label>Transport (km/week):
+      <input type="number" id="transport" placeholder="e.g., 50" />
+    </label><br/>
+    <label>Waste (kg/week):
+      <input type="number" id="waste" placeholder="e.g., 5" />
+    </label><br/>
+    <button class="calculate" onclick="calculateFootprint()">Calculate</button>
+    <p id="result"></p>
+    <img src="https://images.unsplash.com/photo-1505842084320-016a7b628fc3?auto=format&fit=crop&w=800&q=60" alt="Calculator" />
+  </section>
+
+  <!-- Chart Tab -->
+  <section id="chart" class="tab">
+    <h2>Visualizing Your Footprint</h2>
+    <p>
+      The pie chart below shows the breakdown of your emissions by category.
+      This can help you identify which part of your lifestyle contributes the most to your carbon output.
+    </p>
+    <canvas id="footprintChart" width="400" height="400"></canvas>
+    <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=60" alt="Chart Image" />
+  </section>
+
+  <!-- Tips Tab -->
+  <section id="tips" class="tab">
+    <h2>Eco-Friendly Lifestyle Tips</h2>
+    <p>Simple steps to reduce your carbon footprint:</p>
+    <ul>
+      <li>Switch to LED bulbs and unplug devices when not in use</li>
+      <li>Use public transportation, biking, or carpooling</li>
+      <li>Recycle paper, plastic, and compost organic waste</li>
+      <li>Eat local, seasonal, and plant-based meals</li>
+      <li>Install solar panels or use green energy providers</li>
+    </ul>
+    <img src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=800&q=60" alt="Sustainability Tips" />
+  </section>
+
+  <!-- About Tab -->
+  <section id="about" class="tab">
+    <h2>About This Project</h2>
+    <p>
+      The Eco Footprint Counter was created to help individuals measure and understand their environmental impact.
+      We believe that awareness is the first step toward positive change. By calculating your carbon footprint,
+      you're taking an important step toward building a more sustainable future.
+    </p>
+    <p>
+      This tool is free and open-source. You can contribute to its development, share it with others, or build on it for your own projects.
+    </p>
+    <img src="https://images.unsplash.com/photo-1600694448657-2c02ac278853?auto=format&fit=crop&w=800&q=60" alt="Future Green" />
+  </section>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active-tab'));
+      document.getElementById(tabId).classList.add('active-tab');
+    }
+
+    function calculateFootprint() {
+      const electricity = parseFloat(document.getElementById('electricity').value) || 0;
+      const transport = parseFloat(document.getElementById('transport').value) || 0;
+      const waste = parseFloat(document.getElementById('waste').value) || 0;
+
+      const elecFootprint = electricity * 0.5;
+      const transFootprint = transport * 0.21;
+      const wasteFootprint = waste * 0.9;
+      const total = elecFootprint + transFootprint + wasteFootprint;
+
+      document.getElementById('result').textContent =
+        Your estimated weekly carbon footprint: ${total.toFixed(2)} kg CO₂;
+
+      renderChart(elecFootprint, transFootprint, wasteFootprint);
+      switchTab('chart');
+    }
+
+    function renderChart(electricity, transport, waste) {
+      const ctx = document.getElementById('footprintChart').getContext('2d');
+      if (window.footprintChart) window.footprintChart.destroy();
+
+      window.footprintChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: ['Electricity', 'Transport', 'Waste'],
+          datasets: [{
+            data: [electricity, transport, waste],
+            backgroundColor: ['#4caf50', '#2196f3', '#ff9800']
+          }]
+        }
+      });
+    }
+
+    document.querySelector('.dark-toggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+  </script>
+</body>
+</html>
